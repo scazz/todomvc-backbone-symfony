@@ -3,10 +3,14 @@
 namespace Todo\APIBundle\TodoAPIBundle\Tests\Controller;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase as WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Client;
+
 use Todo\APIBundle\TodoAPIBundle\Tests\Fixtures\Entity\LoadTodoData;
 
 class TodoControllerTest extends WebTestCase
 {
+    /* @var Client $client */
     private $client;
 
     private function setUpTest() {
@@ -23,9 +27,9 @@ class TodoControllerTest extends WebTestCase
     {
         $this->setUpTest();
         $todos = $this->loadTodosFixtures();
-        $this->todo = array_pop($todos);
+        $todo = array_pop($todos);
 
-        $route =  $this->getUrl('api_1_get_todo', array('id' => $this->todo->getId(), '_format' => 'json'));
+        $route =  $this->getUrl('api_1_get_todo', array('id' => $todo->getId(), '_format' => 'json'));
 
         $this->client->request('GET', $route, array('ACCEPT' => 'application/json'));
         $response = $this->client->getResponse();
@@ -116,7 +120,7 @@ class TodoControllerTest extends WebTestCase
      * Private functions
      */
 
-    protected function assertJsonResponse($response, $statusCode = 200, $checkValidJson =  true, $contentType = 'application/json')
+    protected function assertJsonResponse(Response $response, $statusCode = 200, $checkValidJson =  true, $contentType = 'application/json')
     {
         $this->assertEquals(
             $statusCode, $response->getStatusCode(),
