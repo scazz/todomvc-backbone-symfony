@@ -1,0 +1,6 @@
+todo_api:
+    type:     rest
+    prefix:   /
+    resource: "@TodoAPIBundle/Resources/config/routes.yml"
+
+

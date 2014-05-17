@@ -1,0 +1,10 @@
+todo_api_Todo:
+     type:     rest
+     prefix:   /api/v1
+     resource: "Todo\APIBundle\TodoAPIBundle\Controller\TodoController"
+     name_prefix:  api_1_
+
+_demo:
+    resource:  "Todo\APIBundle\TodoAPIBundle\Controller\SiteController"
+    type:     annotation
+    prefix:   /
