@@ -62,7 +62,6 @@ class TodoController extends FOSRestController
      */
     public function postTodoAction(Request $request)
     {
-        // return new Response( print_r($request->getContent(),true) );
         try {
              $newTodo = $this
                 ->container
@@ -73,16 +72,38 @@ class TodoController extends FOSRestController
             return $x->getForm();
         }
 
-
-
         $response = $this->forward('TodoAPIBundle:Todo:getTodo', array('id' => $newTodo->getId()), array('_format'=>'json' ));
         $response->setStatusCode("201");
         return $response;
 
-        $route = '/api/v1/todos/' . $newTodo->getId() . '.json';
-        $response = $this->redirect($route, 201);
+    }
+
+    /**
+     * @Annotations\View(
+     *  template = "AcmeBlogBundle:Page:editPage.html.twig",
+     *  templateVar = "form"
+     * )
+     *
+     * @param Request $request
+     * @param $id
+     */
+    public function putTodoAction(Request $request, $id) {
+        $todo = $this->container->get('todo_api.todo.handler')->get($id);
+
+        if ($todo) {
+            try {
+                $todo = $this->container->get('todo_api.todo.handler')->put($todo, $request);
+            } catch(InvalidFormException $x) {
+                return $x->getForm();
+            }
+        } else {
+
+        }
+        $response = $this->forward('TodoAPIBundle:Todo:getTodo', array('id' => $todo->getId()), array('_format'=>'json' ));
+        $response->setStatusCode("200");
         return $response;
     }
+
 
 
 

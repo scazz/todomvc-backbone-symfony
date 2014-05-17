@@ -115,6 +115,37 @@ class TodoControllerTest extends WebTestCase
         $this->assertJsonResponse($response, 400, false );
     }
 
+    public function testJsonPutTodoActionWillModifyTodo()
+    {
+        $this->setUpTest();
+        $todos = $this->loadTodosFixtures();
+
+        $todo = array_pop($todos);
+
+        // make put request
+        $this->client->request(
+            'PUT',
+            sprintf('/api/v1/todos/%d.json', $todo->getId()),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"id":'.$todo->getId().', "title":"new title","completed":true}'
+        );
+        $response = $this->client->getResponse();
+        $this->assertJsonResponse($response, 200, true);
+        $returnedTodo = json_decode($response->getContent());
+        $this->assertEquals("new title", $returnedTodo->title);
+
+        //verify this change has been made in the DB
+        $route =  $this->getUrl('api_1_get_todo', array('id' => $todo->getId(), '_format' => 'json'));
+        $this->client->request('GET', $route, array('ACCEPT' => 'application/json'));
+        $response = $this->client->getResponse();
+        $this->assertJsonResponse( $response );
+
+        $returnedTodo = json_decode($response->getContent());
+        $this->assertEquals("new title", $returnedTodo->title);
+    }
+
 
     /*
      * Private functions

@@ -43,6 +43,10 @@ class TodoHandler implements TodoHandlerInterface {
         return $this->processForm($todo, $request, 'POST');
     }
 
+    public function put(TodoInterface $todo, Request $request) {
+        return $this->processForm($todo, $request, 'PUT');
+    }
+
 
     private function processForm(TodoInterface $todo, Request $request, $method = 'PUT') {
         //$form = $this->createForm( new APITodoType(), $todo);
