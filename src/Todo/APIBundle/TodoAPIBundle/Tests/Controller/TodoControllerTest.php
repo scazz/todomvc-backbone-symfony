@@ -94,6 +94,23 @@ class TodoControllerTest extends WebTestCase
         $this->assertEquals($originalTodo->completed, $returnedTodo->completed);
     }
 
+    public function testJsonPostTodoActionReturns400WithInvalidParameters()
+    {
+        $serializedTodo = '{"WRONG":"title2","completed":true}';
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/todos.json',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            $serializedTodo
+        );
+
+        $response = $client->getResponse();
+        $this->assertJsonResponse($response, 400, false );
+    }
+
 
     /*
      * Private functions
