@@ -4,7 +4,7 @@ var TodoList = Backbone.Collection.extend({
 
   model: app.Todo,
   
-  url: 'http://localhost:8000/api/v1/todos',
+  url: '/api/v1/todos',
   
   //localStorage: new Backbone.LocalStorage('todos-backbone'),
 
