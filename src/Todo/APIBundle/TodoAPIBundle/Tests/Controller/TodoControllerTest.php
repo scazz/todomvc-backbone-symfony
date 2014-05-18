@@ -119,7 +119,6 @@ class TodoControllerTest extends WebTestCase
     {
         $this->setUpTest();
         $todos = $this->loadTodosFixtures();
-
         $todo = array_pop($todos);
 
         // make put request
@@ -158,7 +157,24 @@ class TodoControllerTest extends WebTestCase
         );
         $response = $this->client->getResponse();
         $this->assertJsonResponse($response, 404, true);
+    }
 
+    public function testJsonPutTodoActionWithInvalidFields() {
+        $this->setUpTest();
+        $todos = $this->loadTodosFixtures();
+        $todo = array_pop($todos);
+
+        // make put request
+        $this->client->request(
+            'PUT',
+            sprintf('/api/v1/todos/%d.json', $todo->getId()),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"id":'.$todo->getId().', "title":"","completed":true}'
+        );
+        $response = $this->client->getResponse();
+        $this->assertJsonResponse($response, 400, false );
     }
 
 

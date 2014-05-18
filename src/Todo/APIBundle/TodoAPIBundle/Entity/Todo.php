@@ -3,6 +3,7 @@
 namespace Todo\APIBundle\TodoAPIBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Todo\APIBundle\TodoAPIBundle\Model\TodoInterface;
 
 /**
@@ -19,6 +20,7 @@ class Todo implements TodoInterface {
     private $id;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private  $title;
