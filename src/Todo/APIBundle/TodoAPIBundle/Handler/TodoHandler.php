@@ -47,6 +47,11 @@ class TodoHandler implements TodoHandlerInterface {
         return $this->processForm($todo, $request, 'PUT');
     }
 
+    public function delete(TodoInterface $todo) {
+        $this->om->remove($todo);
+        $this->om->flush();
+    }
+
 
     private function processForm(TodoInterface $todo, Request $request, $method = 'PUT') {
         //$form = $this->createForm( new APITodoType(), $todo);
@@ -65,6 +70,7 @@ class TodoHandler implements TodoHandlerInterface {
             throw new InvalidFormException('Invalid submitted data', $form);
         }
     }
+
 
     private function createTodo() {
         return new $this->entityClass();

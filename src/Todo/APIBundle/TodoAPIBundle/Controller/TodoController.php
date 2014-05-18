@@ -83,16 +83,15 @@ class TodoController extends FOSRestController
      *  template = "AcmeBlogBundle:Page:editPage.html.twig",
      *  templateVar = "form"
      * )
+     * @throws NotFoundHttpException
      *
      * @param Request $request
      * @param $id
+     * @return Response
      */
     public function putTodoAction(Request $request, $id) {
-        $todo = $this->container->get('todo_api.todo.handler')->get($id);
+        $todo = $this->getOr404($id);
 
-        if (! $todo ) {
-            throw new NotFoundHttpException("The todo with id $id was not found");
-        }
         try {
             $todo = $this->container->get('todo_api.todo.handler')->put($todo, $request);
         } catch(InvalidFormException $x) {
@@ -103,6 +102,15 @@ class TodoController extends FOSRestController
         return $response;
     }
 
+    public function deleteTodoAction(Request $request, $id) {
+        $todo = $this->getOr404($id);
+        $this->container->get('todo_api.todo.handler')->delete($todo);
+
+        $response = new Response();
+        $response->setStatusCode(204);
+        return $response;
+
+    }
 
 
 

@@ -177,6 +177,47 @@ class TodoControllerTest extends WebTestCase
         $this->assertJsonResponse($response, 400, false );
     }
 
+    public function testJsonDeleteTodoAction()
+    {
+        $this->setUpTest();
+        $todos = $this->loadTodosFixtures();
+        $todo = array_pop($todos);
+
+        // make put request
+        $this->client->request(
+            'DELETE',
+            sprintf('/api/v1/todos/%d.json', $todo->getId()),
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            ''
+        );
+        $response = $this->client->getResponse();
+        $this->assertEquals(204, $response->getStatusCode());
+
+
+        // check todo was deleted!
+        $route =  $this->getUrl('api_1_get_todo', array('id' => $todo->getId(), '_format' => 'json'));
+        $this->client->request('GET', $route, array('ACCEPT' => 'application/json'));
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testJsonDeleteTodoActionThrows404IfResourceNotFound() {
+        $this->setUpTest();
+
+        $this->client->request(
+            'DELETE',
+            '/api/v1/todos/0.json',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            ''
+        );
+        $response = $this->client->getResponse();
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
 
     /*
      * Private functions
