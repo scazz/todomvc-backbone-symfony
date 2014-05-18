@@ -90,14 +90,13 @@ class TodoController extends FOSRestController
     public function putTodoAction(Request $request, $id) {
         $todo = $this->container->get('todo_api.todo.handler')->get($id);
 
-        if ($todo) {
-            try {
-                $todo = $this->container->get('todo_api.todo.handler')->put($todo, $request);
-            } catch(InvalidFormException $x) {
-                return $x->getForm();
-            }
-        } else {
-
+        if (! $todo ) {
+            throw new NotFoundHttpException("The todo with id $id was not found");
+        }
+        try {
+            $todo = $this->container->get('todo_api.todo.handler')->put($todo, $request);
+        } catch(InvalidFormException $x) {
+            return $x->getForm();
         }
         $response = $this->forward('TodoAPIBundle:Todo:getTodo', array('id' => $todo->getId()), array('_format'=>'json' ));
         $response->setStatusCode("200");

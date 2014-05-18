@@ -146,6 +146,21 @@ class TodoControllerTest extends WebTestCase
         $this->assertEquals("new title", $returnedTodo->title);
     }
 
+    public function testJsonPutTodoActionWithInvalidIDWill404() {
+        $this->setUpTest();
+        $this->client->request(
+            'PUT',
+            '/api/v1/todos/0.json',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"title":"new title","completed":true}'
+        );
+        $response = $this->client->getResponse();
+        $this->assertJsonResponse($response, 404, true);
+
+    }
+
 
     /*
      * Private functions
